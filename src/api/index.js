@@ -2,7 +2,8 @@ import axios from 'axios'
 import Message from "vue-m-message"
 
 const api = axios.create({
-    baseURL: 'https://localhost:7064/',
+    // baseURL: 'https://localhost:7064/',
+    baseURL: 'http://8.140.56.201:5000',
     timeout: 1000 * 60,
     responseType: 'json',
 })
