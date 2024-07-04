@@ -1,0 +1,83 @@
+<script setup>
+import { useRouter } from "vue-router";
+import {useNoteStore} from "@/stores/note.js";
+import {ref} from "vue";
+import {storeToRefs} from "pinia";
+import { marked } from "marked";
+import "github-markdown-css"
+
+const router = useRouter()
+const noteStore = useNoteStore()
+const NoteList = ref([])
+
+const noteId = router.currentRoute.value.query.id
+
+async function getNotes() {
+  await noteStore.getNoteList(noteId)
+  const { NoteData } = storeToRefs(noteStore)
+  NoteList.value = NoteData.value
+  NoteList.value.createTime = NoteList.value.createTime.slice(0,10)
+  if (NoteList.value.upDateTime)
+    NoteList.value.upDateTime = NoteList.value.upDateTime.slice(0,10)
+  NoteList.value.content = marked(NoteList.value.content)
+}
+getNotes()
+</script>
+
+<template>
+<div class="box">
+  <div class="container">
+    <button class="btn btn-link" @click="$router.go(-1)">
+      <i class="bi bi-arrow-left"></i>
+      返回
+    </button>
+    <h1>{{ NoteList.title }}</h1>
+    <div class="time-box">
+      <p>{{ NoteList.createTime }}</p>
+      <p v-if="NoteList.upDateTime" style="text-align: right"> 于{{ NoteList.upDateTime }}修改 </p>
+    </div>
+    <hr>
+    <div class="content" v-html="NoteList.content"></div>
+  </div>
+</div>
+</template>
+
+<style scoped>
+.box {
+  width: 100%;
+  min-height: 100vh;
+  --color: #E1E1E1;
+  background-color: #F3F3F3;
+  background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+  linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+  background-size: 55px 55px;
+  padding-bottom: 10px;
+}
+
+.time-box {
+  width: 100%;
+  height: 25px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content {
+  width: auto;
+  margin-top: 20px;
+}
+
+:deep(img) {
+  width: 100%;
+  height: auto;
+}
+
+:deep(iframe) {
+  width: 100%;
+}
+
+@media (min-width: 1000px) {
+  .container {
+    width: 950px;
+  }
+}
+</style>
