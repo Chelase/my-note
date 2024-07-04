@@ -36,9 +36,6 @@ getNotes()
       <div class="col-md-6" v-for="item in NoteList" :key="item.id" style="max-width: 540px;">
         <div class="card mb-3">
           <div class="row g-0" style="min-height: 128px">
-            <div class="col-md-4" v-if="false">
-              <img src="..." class="img-fluid rounded-start" alt="...">
-            </div>
             <div class="col-md-8">
               <div class="card-body">
                 <h5 class="card-title" @click="$router.push({path:'/view_note',query: {id: item.id}})">{{ item.title }}</h5>
