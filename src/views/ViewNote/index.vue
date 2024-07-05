@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import {useNoteStore} from "@/stores/note.js";
-import {ref} from "vue";
+import {onMounted, ref, onBeforeMount} from "vue";
 import {storeToRefs} from "pinia";
 import { marked } from "marked";
 import "github-markdown-css"
@@ -22,6 +22,34 @@ async function getNotes() {
   NoteList.value.content = marked(NoteList.value.content)
 }
 getNotes()
+
+onMounted(() => {
+
+  // 等待 DOM 渲染完成后，检查并调整 iframe 高度
+  const adjustIframes = () => {
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach(iframe => {
+      if (!iframe.getAttribute("height")) {
+        iframe.style.height = "500px"; // 设置默认高度
+      }
+    });
+  };
+
+  // 使用 MutationObserver 观察 DOM 变化
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === "childList") {
+        adjustIframes();
+      }
+    }
+  });
+
+  const contentElement = document.querySelector(".content");
+  if (contentElement) {
+    observer.observe(contentElement, { childList: true, subtree: true });
+    adjustIframes();
+  }
+});
 </script>
 
 <template>
@@ -73,6 +101,7 @@ getNotes()
 
 :deep(iframe) {
   width: 100%;
+  max-height: 500px;
 }
 
 @media (min-width: 1000px) {

@@ -2,8 +2,10 @@ import axios from 'axios'
 import Message from "vue-m-message"
 
 const api = axios.create({
-    // baseURL: 'https://localhost:7064/',
-    baseURL: 'http://8.140.56.201:5000',
+    baseURL: 'https://localhost:7064/',
+    // baseURL: 'http://8.140.56.201:5000',
+    // baseURL: 'https://8.140.56.201:5001',
+    // baseURL: 'https://timewishtips.cn'
     timeout: 1000 * 60,
     responseType: 'json',
 })
@@ -42,7 +44,7 @@ api.interceptors.response.use(
         let message = error.message
         console.log(43,error);
         if (message === 'Network Error') {
-            message = '后端网络故障'
+            message = '服务器故障'
         }
         else if (message.includes('timeout')) {
             message = '接口请求超时'
