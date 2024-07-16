@@ -15,7 +15,7 @@ const noteId = router.currentRoute.value.query.id
 async function getNotes() {
   await noteStore.getNoteList(noteId)
   const { NoteData } = storeToRefs(noteStore)
-  NoteList.value = NoteData.value
+  NoteList.value = NoteData.value.list
   NoteList.value.createTime = NoteList.value.createTime.slice(0,10)
   if (NoteList.value.upDateTime)
     NoteList.value.upDateTime = NoteList.value.upDateTime.slice(0,10)

@@ -19,8 +19,7 @@ async function editNote() {
   if (noteId) {
     await noteStore.getNoteList(noteId)
     const { NoteData } = storeToRefs(noteStore)
-    console.log(NoteData.value)
-    NoteContent.value = NoteData.value
+    NoteContent.value = NoteData.value.list
   }
 }
 

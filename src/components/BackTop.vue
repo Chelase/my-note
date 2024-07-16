@@ -41,8 +41,8 @@ onMounted(() => {
 .totop {
   display: none;
   position: fixed;
-  bottom: 120px;
-  right: 80px;
+  bottom: 100px;
+  right: 40px;
   background-color: #b0b0b0;
   padding: 10px;
   border-radius: 50%;
