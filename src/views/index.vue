@@ -85,6 +85,7 @@ getNotes()
         </li>
       </ul>
     </nav>
+    <a href="https://beian.miit.gov.cn/" target="_blank" class="ICPRecordNumber">鲁ICP备2024104791号-1</a>
   </div>
 
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -131,6 +132,14 @@ nav {
   position: fixed;
   right: 100px;
   bottom: 50px;
+}
+
+.ICPRecordNumber {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  text-decoration: none;
 }
 
 @media (min-width: 1400px) {
