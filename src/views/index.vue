@@ -8,12 +8,15 @@ import Message from "vue-m-message"
 const noteStore = useNoteStore()
 const NoteList = ref([])
 const noteId = ref('')
+const NoteForm = ref({
+  currentPage: 1,
+  pageSize: 6
+})
 
-async function getNotes(page = 1) {
-  await noteStore.getNoteList(0,page,6)
+async function getNotes() {
+  await noteStore.getNoteList(0,NoteForm.value.currentPage,NoteForm.value.pageSize)
   const { NoteData } = storeToRefs(noteStore)
   NoteList.value = NoteData.value
-  console.log(NoteList.value);
 }
 
 async function del(id) {
@@ -22,18 +25,18 @@ async function del(id) {
   await getNotes()
 }
 
-async function pagination(page = 1) {
-  if(page <= 1) {
-    page = 1
+async function handleCurrentChange() {
+  if(NoteForm.value.currentPage < 1) {
+    NoteForm.value.currentPage = 1
     Message.info('已经是第一页')
     return false
   }
-  if(page >= NoteList.value.currentPage) {
-    page = NoteList.value.currentPage
+  if(NoteForm.value.currentPage >= NoteList.value.currentPage) {
+    NoteForm.value.currentPage = NoteList.value.currentPage
     Message.info('已经是最后一页')
     return false
   }
-  await getNotes(page)
+  await getNotes()
 }
 
 getNotes()
@@ -70,21 +73,16 @@ getNotes()
         </div>
       </div>
     </div>
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="上一页" @click="pagination(NoteList.currentPage--)">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item" v-for="page in NoteList.totalPages" :key="page" @click="pagination(page)"><a class="page-link" href="#">{{page}}</a></li>
-        <li class="page-item" @click="pagination(NoteList.currentPage++)">
-          <a class="page-link" href="#" aria-label="下一页">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <div class="float-end">
+      <el-pagination
+          v-model:current-page="NoteForm.currentPage"
+          v-model:page-size="NoteForm.pageSize"
+          background
+          layout="prev, pager, next, jumper"
+          :total="NoteList.totalCount"
+          @current-change="handleCurrentChange"
+      />
+    </div>
     <a href="https://beian.miit.gov.cn/" target="_blank" class="ICPRecordNumber">鲁ICP备2024104791号-1</a>
   </div>
 
@@ -135,11 +133,12 @@ nav {
 }
 
 .ICPRecordNumber {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
+  display: block;
+  margin-top: 80px;
+  text-align: center;
   text-decoration: none;
+  color: #585858;
+  font-size: 15px;
 }
 
 @media (min-width: 1400px) {

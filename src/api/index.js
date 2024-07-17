@@ -2,9 +2,9 @@ import axios from 'axios'
 import Message from "vue-m-message"
 
 const api = axios.create({
-    baseURL: 'https://localhost:5001/',
+    // baseURL: 'https://localhost:5001/',
     // baseURL: 'http://8.140.56.201:5000',
-    // baseURL: 'https://8.140.56.201:5001',
+    baseURL: 'https://8.140.56.201:5001',
     // baseURL: 'https://note-api.timewishtips.cn'
     timeout: 1000 * 60,
     responseType: 'json',

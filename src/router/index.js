@@ -17,6 +17,11 @@ const router = createRouter({
       path: '/view_note',
       name: 'view_note',
       component: () => import('@/views/ViewNote/index.vue')
+    },
+    {
+      path: '/:all(.*)*',
+      name: 'not_found',
+      component: () => import('@/views/NotFound.vue')
     }
   ]
 })
