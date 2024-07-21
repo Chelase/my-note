@@ -106,7 +106,6 @@ async function saveNote () {
     Message.success('保存成功')
     router.go(-1)
   }
-  console.log(vditor.value.getValue());
 }
 </script>
 

@@ -1,9 +1,11 @@
 <script setup>
 import { useRouter } from "vue-router";
 import {useNoteStore} from "@/stores/note.js";
-import {onMounted, ref, onBeforeMount} from "vue";
+import {onMounted, ref} from "vue";
 import {storeToRefs} from "pinia";
 import { marked } from "marked";
+import {preview} from 'vue3-image-preview';
+
 import "github-markdown-css"
 
 const router = useRouter()
@@ -35,11 +37,27 @@ onMounted(() => {
     });
   };
 
+  // 为所有图片添加预览
+  const addPhotoPreview = () => {
+    // 获取所有的 img 元素
+    const imgElements = document.querySelectorAll('img');
+
+    // 遍历 imgElements 数组并输出每个 img 元素的 src 属性
+    imgElements.forEach(imgElement => {
+      imgElement.addEventListener('click',() => {
+        preview({
+          images: imgElement.src
+        });
+      })
+    });
+  }
+
   // 使用 MutationObserver 观察 DOM 变化
   const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
       if (mutation.type === "childList") {
-        adjustIframes();
+        adjustIframes()
+        addPhotoPreview()
       }
     }
   });
@@ -47,7 +65,8 @@ onMounted(() => {
   const contentElement = document.querySelector(".content");
   if (contentElement) {
     observer.observe(contentElement, { childList: true, subtree: true });
-    adjustIframes();
+    adjustIframes()
+    addPhotoPreview()
   }
 });
 </script>
