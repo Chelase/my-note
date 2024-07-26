@@ -4,7 +4,7 @@ import {useNoteStore} from "@/stores/note.js";
 import {onMounted, ref} from "vue";
 import {storeToRefs} from "pinia";
 import { marked } from "marked";
-import { preview } from 'v-preview-image'
+import { preview } from 'vue3-image-preview'
 
 import "github-markdown-css"
 
@@ -45,7 +45,9 @@ onMounted(() => {
     // 遍历 imgElements 数组并输出每个 img 元素的 src 属性
     imgElements.forEach(imgElement => {
       imgElement.addEventListener('click',() => {
-        preview(imgElement.src)
+        preview({
+          images: imgElement.src
+        })
       })
     });
   }
