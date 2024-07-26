@@ -5,8 +5,8 @@ import noteApi from '@/api/modules/note.js'
 export const useNoteStore = defineStore('note', () => {
   const NoteData = ref({})
 
-  const getNoteList = async (id, page, pageSize) => {
-    NoteData.value = await noteApi.GetNote({id, page, pageSize})
+  const getNoteList = async (id, page, size) => {
+    NoteData.value = await noteApi.GetNote({id, page, size})
   }
 
   const addNoteList = async (data) => {

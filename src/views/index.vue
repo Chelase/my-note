@@ -25,17 +25,8 @@ async function del(id) {
   await getNotes()
 }
 
-async function handleCurrentChange() {
-  if(NoteForm.value.currentPage < 1) {
-    NoteForm.value.currentPage = 1
-    Message.info('已经是第一页')
-    return false
-  }
-  if(NoteForm.value.currentPage >= NoteList.value.currentPage) {
-    NoteForm.value.currentPage = NoteList.value.currentPage
-    Message.info('已经是最后一页')
-    return false
-  }
+async function handleCurrentChange(currentPage) {
+  NoteForm.value.currentPage = currentPage
   await getNotes()
 }
 
