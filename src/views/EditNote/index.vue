@@ -3,7 +3,7 @@ import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import {ref, onMounted, onActivated} from 'vue'
 import { useNoteStore } from '@/stores/note.js'
-import Message from "vue-m-message";
+import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
 import {storeToRefs} from "pinia";
 
@@ -99,11 +99,11 @@ function initializeVditor() {
 
 async function saveNote () {
   if (NoteContent.value.title === '')
-    Message.error('标题为空')
+    ElMessage.error('标题为空')
   else {
     NoteContent.value.content = vditor.value.getValue()
     await noteStore.addNoteList(NoteContent.value)
-    Message.success('保存成功')
+    ElMessage.success('保存成功')
     router.go(-1)
   }
 }
