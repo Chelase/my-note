@@ -11,7 +11,6 @@ export const useNoteStore = defineStore('note', () => {
 
   const addNoteList = async (data) => {
     await noteApi.AddNote(data)
-
   }
 
   return {

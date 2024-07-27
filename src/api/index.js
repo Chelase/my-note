@@ -1,11 +1,11 @@
 import axios from 'axios'
-import Message from "vue-m-message"
+import {ElMessage} from "element-plus";
 
 const api = axios.create({
-    // baseURL: 'https://localhost:5001/',
+    baseURL: 'https://localhost:5001/',
     // baseURL: 'http://8.140.56.201:5000',
     // baseURL: 'https://8.140.56.201:5001',
-    baseURL: 'https://note-api.timewishtips.cn',
+    // baseURL: 'https://note-api.timewishtips.cn',
     timeout: 1000 * 60,
     responseType: 'json',
 })
@@ -34,7 +34,7 @@ api.interceptors.response.use(
             if (response.data.Msg !== '') {
                 // 错误提示
                 // Message.error(response.data.Msg)
-                Message.error(response.data.Msg)
+                ElMessage.error(response.data.Msg)
                 return Promise.reject(response.data)
             }
         }
@@ -53,7 +53,7 @@ api.interceptors.response.use(
             // message = `接口${message.substr(message.length - 3)}异常`
             message = error.response.data
         }
-        Message.error(message)
+        ElMessage.error(message)
         return Promise.reject(error)
     },
 )

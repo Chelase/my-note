@@ -3,11 +3,10 @@ import {useNoteStore} from "@/stores/note.js"
 import {storeToRefs} from "pinia";
 import {ref} from "vue";
 import noteApi from '@/api/modules/note.js'
-import Message from "vue-m-message"
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const noteStore = useNoteStore()
 const NoteList = ref([])
-const noteId = ref('')
 const NoteForm = ref({
   currentPage: 1,
   pageSize: 6
@@ -20,9 +19,23 @@ async function getNotes() {
 }
 
 async function del(id) {
-  await noteApi.DelNote(id)
-  Message.success('删除成功')
-  await getNotes()
+  ElMessageBox.confirm(
+      '确定要删除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(async () => {
+        await noteApi.DelNote(id)
+        ElMessage({
+          type: 'success',
+          message: '删除成功',
+        })
+        await getNotes()
+      })
 }
 
 async function handleCurrentChange(currentPage) {
@@ -51,10 +64,10 @@ getNotes()
                 <!-- <p class="card-text">{{ item.content }}</p> -->
                 <p class="card-text"><small class="text-muted">{{ item.createTime.slice(0,10) }}</small></p>
                 <div class="hidden-operation">
-                  <button type="button" class="btn btn-outline-primary" @click="$router.push({path:'/edit_note',query: {id: item.id}})">
+                  <button class="btn btn-outline-primary" @click="$router.push({path:'/edit_note',query: {id: item.id}})">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="noteId = item.id">
+                  <button class="btn btn-outline-danger" @click="del(item.id)">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -66,6 +79,7 @@ getNotes()
     </div>
     <div class="float-end">
       <el-pagination
+          hide-on-single-page
           v-model:current-page="NoteForm.currentPage"
           v-model:page-size="NoteForm.pageSize"
           background
@@ -75,21 +89,6 @@ getNotes()
       />
     </div>
     <a href="https://beian.miit.gov.cn/" target="_blank" class="ICPRecordNumber">鲁ICP备2024104791号-1</a>
-  </div>
-
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">确定删除该笔记吗？</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="del(noteId)">确认删除</button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
