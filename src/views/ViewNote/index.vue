@@ -27,16 +27,6 @@ getNotes()
 
 onMounted(() => {
 
-  // 等待 DOM 渲染完成后，检查并调整 iframe 高度
-  const adjustIframes = () => {
-    const iframes = document.querySelectorAll("iframe");
-    iframes.forEach(iframe => {
-      if (!iframe.getAttribute("height")) {
-        iframe.style.height = "500px"; // 设置默认高度
-      }
-    });
-  };
-
   // 为所有图片添加预览
   const addPhotoPreview = () => {
     // 获取所有的 img 元素
@@ -55,17 +45,13 @@ onMounted(() => {
   // 使用 MutationObserver 观察 DOM 变化
   const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
-      if (mutation.type === "childList") {
-        adjustIframes()
-        addPhotoPreview()
-      }
+      if (mutation.type === "childList") { addPhotoPreview() }
     }
   });
 
   const contentElement = document.querySelector(".content");
   if (contentElement) {
     observer.observe(contentElement, { childList: true, subtree: true });
-    adjustIframes()
     addPhotoPreview()
   }
 });
@@ -116,16 +102,19 @@ onMounted(() => {
 :deep(img) {
   width: 100%;
   height: auto;
+  margin: 20px 0;
 }
 
 :deep(iframe) {
   width: 100%;
-  max-height: 500px;
+  aspect-ratio: 16 / 9; /* 设定宽高比为16:9 */
+  max-height: 450px;
+  margin: 20px 0;
 }
 
 @media (min-width: 1000px) {
   .container {
-    width: 950px;
+    width: 700px;
   }
 }
 </style>

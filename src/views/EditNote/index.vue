@@ -21,11 +21,11 @@ async function editNote() {
     const { NoteData } = storeToRefs(noteStore)
     NoteContent.value = NoteData.value.list
   }
+  initializeVditor();
 }
 
 onMounted(async () => {
   await editNote();
-  initializeVditor();
 });
 
 onActivated(() => {
@@ -91,6 +91,7 @@ function initializeVditor() {
         ],
       },
     ],
+    model: 'ir',
     after() {
       vditor.value.setValue(NoteContent.value.content);
     }
