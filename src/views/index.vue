@@ -27,8 +27,7 @@ async function del(id) {
         cancelButtonText: '取消',
         type: 'warning',
       }
-  )
-      .then(async () => {
+  ).then(async () => {
         await noteApi.DelNote(id)
         ElMessage({
           type: 'success',
@@ -88,7 +87,6 @@ getNotes()
           @current-change="handleCurrentChange"
       />
     </div>
-    <a href="https://beian.miit.gov.cn/" target="_blank" class="ICPRecordNumber">鲁ICP备2024104791号-1</a>
   </div>
 </template>
 
@@ -120,15 +118,6 @@ nav {
   position: fixed;
   right: 100px;
   bottom: 50px;
-}
-
-.ICPRecordNumber {
-  display: block;
-  margin-top: 80px;
-  text-align: center;
-  text-decoration: none;
-  color: #585858;
-  font-size: 15px;
 }
 
 @media (min-width: 1400px) {

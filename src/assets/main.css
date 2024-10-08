@@ -6,12 +6,50 @@
   font-weight: normal;
 }
 
-pre {
-  background-color: #282C34;
-  padding: 10px;
+/*pre {*/
+/*  background-color: #282C34;*/
+/*  padding: 10px;*/
+/*  border-radius: 5px;*/
+/*  font-family: 'Courier New', Courier, monospace;*/
+/*  line-height: 1.5;*/
+/*  overflow: auto;*/
+/*  color: white;*/
+/*}*/
+
+.css-button {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
   border-radius: 5px;
-  font-family: 'Courier New', Courier, monospace;
-  line-height: 1.5;
-  overflow: auto;
-  color: white;
+  border: none;
+}
+
+/*登录按钮*/
+.css-button-shadow-border--sky {
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+  background-color: rgb(7,115,214)
+}
+.css-button-shadow-border--sky:hover {
+  background-color: #3a86ff;
+}
+.css-button-shadow-border--sky:active {
+  top: 2px;
+}
+/*首页按钮*/
+.css-button-shadow-border--green {
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+  background: #57cc99;
+}
+.css-button-shadow-border--green:hover {
+  background-color: #80ed99;
+}
+.css-button-shadow-border--green:active {
+  top: 2px;
 }

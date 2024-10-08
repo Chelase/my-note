@@ -4,12 +4,18 @@ import BackTop from "@/components/BackTop.vue";
 
 <template>
 
-  <RouterView />
+  <div class="box">
+    <RouterView />
 
-  <BackTop />
+    <BackTop />
+  </div>
 
 </template>
 
 <style scoped>
-
+.box {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #eef0f4;
+}
 </style>

@@ -22,7 +22,12 @@ const router = createRouter({
       path: '/:all(.*)*',
       name: 'not_found',
       component: () => import('@/views/NotFound.vue')
-    }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login.vue')
+    },
   ]
 })
 
