@@ -2,24 +2,22 @@
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import {ref, onMounted, onActivated} from 'vue'
-import { useNoteStore } from '@/stores/note.js'
 import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
-import {storeToRefs} from "pinia";
+import noteApi from '@/api/modules/note.js'
 
 const vditor = ref()
 const NoteContent = ref({
   title: '',
   content: ''
 })
-const noteStore = useNoteStore()
 const noteId = router.currentRoute.value.query.id
 
 async function editNote() {
   if (noteId) {
-    await noteStore.getNoteList(noteId)
-    const { NoteData } = storeToRefs(noteStore)
-    NoteContent.value = NoteData.value.list
+    await noteApi.GetNote({id: noteId}).then(res => {
+      NoteContent.value = res.note
+    })
   }
   initializeVditor();
 }
@@ -103,7 +101,7 @@ async function saveNote () {
     ElMessage.error('标题为空')
   else {
     NoteContent.value.content = vditor.value.getValue()
-    await noteStore.addNoteList(NoteContent.value)
+    await noteApi.AddNote(NoteContent.value)
     ElMessage.success('保存成功')
     router.go(-1)
   }

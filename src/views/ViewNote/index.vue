@@ -1,23 +1,21 @@
 <script setup>
 import { useRouter } from "vue-router";
-import {useNoteStore} from "@/stores/note.js";
 import {onMounted, ref} from "vue";
-import {storeToRefs} from "pinia";
 import { marked } from "marked";
 import { preview } from 'vue3-image-preview'
 
 import "github-markdown-css"
+import noteApi from "@/api/modules/note.js";
 
 const router = useRouter()
-const noteStore = useNoteStore()
-const NoteList = ref([])
+const NoteList = ref({})
 
 const noteId = router.currentRoute.value.query.id
 
 async function getNotes() {
-  await noteStore.getNoteList(noteId)
-  const { NoteData } = storeToRefs(noteStore)
-  NoteList.value = NoteData.value.list
+  await noteApi.GetNote({id: noteId}).then(res => {
+    NoteList.value = res.note
+  })
   NoteList.value.createTime = NoteList.value.createTime.slice(0,10)
   if (NoteList.value.upDateTime)
     NoteList.value.upDateTime = NoteList.value.upDateTime.slice(0,10)

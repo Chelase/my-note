@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {ElMessage} from "element-plus";
+import useUserStore from '@/stores/user';
 
 const api = axios.create({
     baseURL: 'https://localhost:5001/',
@@ -27,9 +28,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => {
         if (response.data instanceof Blob) { return response.data }
-        // if (response.data.ErrorCode === 401) {
-        //     useUserStore().logout()
-        // }
         if (response.data.Success === false) {
             if (response.data.Msg !== '') {
                 // 错误提示
@@ -42,6 +40,11 @@ api.interceptors.response.use(
     },
     (error) => {
         let message = error.message
+        if (error.response.status === 401) {
+            useUserStore().logout()
+            ElMessage.error('请前往登录')
+            return false
+        }
         console.log(43,error);
         if (message === 'Network Error') {
             message = '服务器故障'

@@ -1,21 +1,19 @@
 <script setup>
-import {useNoteStore} from "@/stores/note.js"
-import {storeToRefs} from "pinia";
 import {ref} from "vue";
 import noteApi from '@/api/modules/note.js'
 import {ElMessage, ElMessageBox} from "element-plus";
 
-const noteStore = useNoteStore()
-const NoteList = ref([])
+const NoteList = ref({})
 const NoteForm = ref({
+  id: 0,
   currentPage: 1,
   pageSize: 6
 })
 
 async function getNotes() {
-  await noteStore.getNoteList(0,NoteForm.value.currentPage,NoteForm.value.pageSize)
-  const { NoteData } = storeToRefs(noteStore)
-  NoteList.value = NoteData.value
+  await noteApi.GetNote(NoteForm.value).then(res => {
+    NoteList.value = res
+  })
 }
 
 async function del(id) {
@@ -52,7 +50,7 @@ getNotes()
     <button class="btn btn-primary" @click="$router.push('/edit_note')">快速新建</button>
   </div>
 
-  <div class="container my-4">
+  <div class="container my-4" v-if="NoteList.data">
     <div class="row">
       <div class="col-md-6" v-for="item in NoteList.data" :key="item.id" style="max-width: 540px;">
         <div class="card mb-3">
@@ -87,8 +85,8 @@ getNotes()
           @current-change="handleCurrentChange"
       />
     </div>
-    <el-empty v-if="!!NoteList" description="暂无内容" />
   </div>
+  <el-empty v-else description="暂无内容" />
 </template>
 
 <style scoped>
