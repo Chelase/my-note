@@ -1,5 +1,6 @@
 import {ref, computed} from 'vue'
 import {defineStore} from 'pinia'
+import {ElMessage} from 'element-plus'
 import userApi from '@/api/modules/user.js'
 import router from "@/router/index.js"
 
@@ -13,7 +14,10 @@ const useUserStore = defineStore('user', () => {
     const register = async (data) => await userApi.userRegister(data)
 
     const Login = async (data) => {
-        const {token,userInfo} = await userApi.Login(data)
+        const {token,userInfo} = await userApi.userLogin(data).then(() => {
+            ElMessage.success('登录成功')
+            router.push('/')
+        })
         Token.value = token
         UserInfo.value = userInfo
         UserId.value = userInfo.userId

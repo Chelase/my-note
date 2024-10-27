@@ -87,6 +87,7 @@ getNotes()
           @current-change="handleCurrentChange"
       />
     </div>
+    <el-empty v-if="!!NoteList" description="暂无内容" />
   </div>
 </template>
 

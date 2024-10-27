@@ -1,6 +1,7 @@
 <script setup>
 import userApi from '@/api/modules/user.js'
 import useUserStore from '@/stores/user.js'
+import {ElMessage} from 'element-plus'
 
 import { ref } from 'vue'
 
@@ -50,20 +51,38 @@ const RegisterRules = ref({
   ConfirmPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },
     { min: 6, max: 18, message: '长度必须在6~18个字符之间', trigger: 'blur' },
-    { validator: (rule, value, callback) => {
-      if (value !== RegisterForm.value.password) {
-          callback(new Error('密码不一致')); // 这里传递空字符串是为了避免Element UI的默认错误信息
-        } else {
-          callback();
-        }
-      }, trigger: 'blur' }
+    { validator: validatePassword, trigger: 'blur' }
   ],
-})
+});
+
+// 密码验证函数
+function validatePassword(rule, value, callback) {
+  if (value === '') {
+    callback(new Error('请确认密码'));
+  } else if (RegisterForm.value.password !== value) {
+    callback(new Error('密码不一致'));
+  } else {
+    callback();
+  }
+}
+
+
+function go2register() {
+  isRegister.value = !isRegister.value
+  if (isRegister.value) {
+    RegisterFormRef.value?.resetFields();
+    RegisterForm.value = { userName: '', password: '', ConfirmPassword: '' };
+  } else {
+    LoginFormRef.value?.resetFields();
+    LoginForm.value = { userName: '', password: '' };
+  }
+}
 
 // 登录方法
 function login() {
   LoginFormRef.value && LoginFormRef.value?.validate(async (valid) => {
     if (valid) {
+      await userStore.Login(LoginForm.value)
 
     }
   })
@@ -73,7 +92,13 @@ function login() {
 function register() {
   RegisterFormRef.value && RegisterFormRef.value?.validate(async (valid) => {
     if (valid) {
-
+      await userApi.userRegister(RegisterForm.value).then((between) => {
+        ElMessage.success(between.msg)
+        isRegister.value = false
+        RegisterFormRef.value.resetFields()
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   })
 }
@@ -101,7 +126,7 @@ function register() {
             <el-form-item prop="userName">
               <el-input
                   placeholder="用户名"
-                  maxlength="20"
+                  maxlength="50"
                   clearable
                   v-model="LoginForm.userName"
                   style="margin-top: 20px"
@@ -112,7 +137,7 @@ function register() {
               <el-input
                   type="password"
                   placeholder="密码"
-                  maxlength="8"
+                  maxlength="18"
                   v-model="LoginForm.password"
                   show-password
                   style="margin-top: 15px;"
@@ -128,7 +153,7 @@ function register() {
             <el-form-item prop="userName">
               <el-input
                   placeholder="用户名"
-                  maxlength="20"
+                  maxlength="50"
                   v-model="RegisterForm.userName"
                   clearable
                   style="margin-top: 20px"
@@ -139,7 +164,7 @@ function register() {
               <el-input
                   type="password"
                   placeholder="密码"
-                  maxlength="8"
+                  maxlength="18"
                   v-model="RegisterForm.password"
                   show-password
                   style="margin-top: 15px;"
@@ -150,7 +175,7 @@ function register() {
               <el-input
                   type="password"
                   placeholder="确认密码"
-                  maxlength="8"
+                  maxlength="18"
                   v-model="RegisterForm.ConfirmPassword"
                   show-password
                   style="margin-top: 15px;"
@@ -169,11 +194,11 @@ function register() {
           <router-link v-if="!isRegister" to="/">
             <button class="css-button css-button-shadow-border--green"> 返回首页 </button>
           </router-link>
-          <button v-else @click="isRegister = false" class="css-button css-button-shadow-border--green"> 返回登录 </button>
+          <button v-else @click="go2register" class="css-button css-button-shadow-border--green"> 返回登录 </button>
         </div>
 
         <div v-if="!isRegister" class="span-content">
-          <a @click="isRegister = true" href="#" class="ForgotPassword"> 去注册 </a>
+          <a @click="go2register" href="#" class="ForgotPassword"> 去注册 </a>
         </div>
       </div>
       <div class="RightPhoto">
