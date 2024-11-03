@@ -5,6 +5,9 @@ import {ref, onMounted, onActivated} from 'vue'
 import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
 import noteApi from '@/api/modules/note.js'
+import useUserStore from '@/stores/user.js'
+
+const userStore = useUserStore()
 
 const vditor = ref()
 const NoteContent = ref({
@@ -101,9 +104,11 @@ async function saveNote () {
     ElMessage.error('标题为空')
   else {
     NoteContent.value.content = vditor.value.getValue()
-    await noteApi.AddNote(NoteContent.value)
-    ElMessage.success('保存成功')
-    router.go(-1)
+    NoteContent.value.userInfoId = userStore.UserId
+    await noteApi.AddNote(NoteContent.value).then( () => {
+      ElMessage.success('保存成功')
+      router.go(-1)
+    })
   }
 }
 </script>

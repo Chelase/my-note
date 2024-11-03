@@ -2,6 +2,7 @@
 import userApi from '@/api/modules/user.js'
 import useUserStore from '@/stores/user.js'
 import {ElMessage} from 'element-plus'
+import router from "@/router/index.js"
 
 import { ref } from 'vue'
 
@@ -83,7 +84,8 @@ function login() {
   LoginFormRef.value && LoginFormRef.value?.validate(async (valid) => {
     if (valid) {
       await userStore.Login(LoginForm.value)
-
+      ElMessage.success('登录成功')
+      await router.push('/')
     }
   })
 }

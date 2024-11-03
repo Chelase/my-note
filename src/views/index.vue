@@ -2,6 +2,9 @@
 import {ref} from "vue";
 import noteApi from '@/api/modules/note.js'
 import {ElMessage, ElMessageBox} from "element-plus";
+import useUserStore from '@/stores/user.js'
+
+const userStore = useUserStore()
 
 const NoteList = ref({})
 const NoteForm = ref({
@@ -45,9 +48,14 @@ getNotes()
 </script>
 
 <template>
-  <div class="container py-4 px-3 border">
+  <div class="container py-4 px-3 border position-relative">
     <h1>尽情使用我的笔记!</h1>
-    <button class="btn btn-primary" @click="$router.push('/edit_note')">快速新建</button>
+    <div class="d-sm-flex justify-content-between">
+      <button v-if="userStore.isLogin" class="btn btn-primary" @click="$router.push('/edit_note')">快速新建</button>
+      <div>
+        <button v-if="!userStore.isLogin" class="btn btn-primary" @click="$router.push('/login')">登录</button>
+      </div>
+    </div>
   </div>
 
   <div class="container my-4" v-if="NoteList.data">
@@ -60,7 +68,7 @@ getNotes()
                 <h5 class="card-title" @click="$router.push({path:'/view_note',query: {id: item.id}})">{{ item.title }}</h5>
                 <!-- <p class="card-text">{{ item.content }}</p> -->
                 <p class="card-text"><small class="text-muted">{{ item.createTime.slice(0,10) }}</small></p>
-                <div class="hidden-operation">
+                <div class="hidden-operation" v-if="userStore.UserId === item.userInfoId">
                   <button class="btn btn-outline-primary" @click="$router.push({path:'/edit_note',query: {id: item.id}})">
                     <i class="bi bi-pencil-square"></i>
                   </button>
