@@ -3,10 +3,7 @@ import {ElMessage} from "element-plus";
 import useUserStore from '@/stores/user';
 
 const api = axios.create({
-    baseURL: 'https://localhost:5001/',
-    // baseURL: 'http://8.140.56.201:5000',
-    // baseURL: 'https://8.140.56.201:5001',
-    // baseURL: 'https://note-api.timewishtips.cn',
+    baseURL: import.meta.env.VITE_APP_API_BASEURL,
     timeout: 1000 * 60,
     responseType: 'json',
 })

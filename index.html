@@ -4,10 +4,29 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/my-note.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>my-note</title>
+    <title>%VITE_APP_TITLE%</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <div id="app">
+<!--        <div id="browser-upgrade">-->
+<!--            <div class="title">为了您的体验，推荐使用以下浏览器</div>-->
+<!--            <div class="browsers">-->
+<!--                <a href="https://www.microsoft.com/edge" target="_blank" class="browser">-->
+<!--                    <img class="browser-icon" src="/browser_upgrade/edge.png" />-->
+<!--                    <div class="browser-name">Mircosoft Edge</div>-->
+<!--                </a>-->
+<!--                <a href="https://www.google.cn/chrome/" target="_blank" class="browser">-->
+<!--                    <img class="browser-icon" src="/browser_upgrade/chrome.png" />-->
+<!--                    <div class="browser-name">Google Chrome</div>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+    <script type="module" src="/src/main.js">
+        // if (!!window.ActiveXObject || 'ActiveXObject' in window) {
+        //     document.getElementById('browser-upgrade').style.display = 'block'
+        // }
+    </script>
+    <noscript>抱歉，你的浏览器不支持 JavaScript!</noscript>
   </body>
 </html>
