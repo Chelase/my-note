@@ -9,8 +9,8 @@ const userStore = useUserStore()
 const NoteList = ref({})
 const NoteForm = ref({
   id: 0,
-  currentPage: 1,
-  pageSize: 6
+  page: 1,
+  size: 6
 })
 
 async function getNotes() {
@@ -39,7 +39,7 @@ async function del(id) {
 }
 
 async function handleCurrentChange(currentPage) {
-  NoteForm.value.currentPage = currentPage
+  NoteForm.value.page = currentPage
   await getNotes()
 }
 
@@ -63,11 +63,13 @@ getNotes()
       <div class="col-md-6" v-for="item in NoteList.data" :key="item.id" style="max-width: 540px;">
         <div class="card mb-3">
           <div class="row g-0" style="min-height: 128px">
-            <div class="col-md-8">
-              <div class="card-body">
+            <div class="">
+              <div class="card-body" style="max-width: 400px">
                 <h5 class="card-title" @click="$router.push({path:'/view_note',query: {id: item.id}})">{{ item.title }}</h5>
-                <!-- <p class="card-text">{{ item.content }}</p> -->
-                <p class="card-text"><small class="text-muted">{{ item.createTime.slice(0,10) }}</small></p>
+                 <div class="d-sm-flex justify-content-between">
+                   <p class="card-text">{{ item.userName }}</p>
+                   <p class="card-text"><small class="text-muted">{{ item.createTime.slice(0,10) }}</small></p>
+                 </div>
                 <div class="hidden-operation" v-if="userStore.UserId === item.userInfoId">
                   <button class="btn btn-outline-primary" @click="$router.push({path:'/edit_note',query: {id: item.id}})">
                     <i class="bi bi-pencil-square"></i>
@@ -85,8 +87,8 @@ getNotes()
     <div class="float-end">
       <el-pagination
           hide-on-single-page
-          v-model:current-page="NoteForm.currentPage"
-          v-model:page-size="NoteForm.pageSize"
+          :current-page="NoteForm.page"
+          :page-size="NoteForm.size"
           background
           layout="prev, pager, next, jumper"
           :total="NoteList.totalCount"
