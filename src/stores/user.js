@@ -8,7 +8,7 @@ const useUserStore = defineStore('user', () => {
     const UserName = ref(localStorage.UserName ?? '')
     // const UserAvatar = ref(localStorage.UserAvatar ?? '')
     // const UserEmail = ref(localStorage.UserEmail ?? '')
-    const UserInfo = ref({})
+    const UserInfo = ref(JSON.parse(localStorage.getItem('UserInfo')) ?? {})
     const Token = ref(localStorage.Token ?? '')
     const isLogin = computed(() => !!Token.value)
 
@@ -19,10 +19,12 @@ const useUserStore = defineStore('user', () => {
         Token.value = token
         UserInfo.value = userInfo
         UserId.value = userInfo.userId
-        UserName.value = userInfo.name
+        UserName.value = userInfo.userName
+        console.log(userInfo);
         localStorage.setItem('Token', Token.value)
-        localStorage.setItem('UserId', UserInfo.value.userId)
-        localStorage.setItem('UserName', UserInfo.value.name)
+        localStorage.setItem('UserId', UserId.value)
+        localStorage.setItem('UserName', UserName.value)
+        localStorage.setItem('UserInfo', JSON.stringify(UserInfo.value))
     }
 
     // const GetUserInfo = async (id) => {
@@ -36,6 +38,7 @@ const useUserStore = defineStore('user', () => {
         localStorage.removeItem('Token')
         localStorage.removeItem('UserId')
         localStorage.removeItem('UserName')
+        localStorage.removeItem('UserInfo')
         Token.value = ''
         UserId.value = ''
         UserName.value = ''

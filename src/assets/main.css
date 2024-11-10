@@ -6,15 +6,15 @@
   font-weight: normal;
 }
 
-/*pre {*/
-/*  background-color: #282C34;*/
-/*  padding: 10px;*/
-/*  border-radius: 5px;*/
-/*  font-family: 'Courier New', Courier, monospace;*/
-/*  line-height: 1.5;*/
-/*  overflow: auto;*/
-/*  color: white;*/
-/*}*/
+pre {
+  background-color: #282C34;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.5;
+  overflow: auto;
+  color: white;
+}
 
 .css-button {
   min-width: 130px;

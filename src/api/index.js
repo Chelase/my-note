@@ -37,11 +37,11 @@ api.interceptors.response.use(
     },
     (error) => {
         let message = error.message
-        if (error.response.status === 401) {
-            useUserStore().logout()
-            ElMessage.error('请前往登录')
-            return false
-        }
+        // if (error.response.status === 401) {
+        //     useUserStore().logout()
+        //     ElMessage.error('请前往登录')
+        //     return false
+        // }
         console.log(43,error);
         if (message === 'Network Error') {
             message = '服务器故障'

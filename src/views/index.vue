@@ -49,11 +49,15 @@ getNotes()
 
 <template>
   <div class="container py-4 px-3 border position-relative">
-    <h1>尽情使用我的笔记!</h1>
-    <div class="d-sm-flex justify-content-between">
+    <div class="d-flex justify-content-between" style="max-width: 1280px">
+      <h1>{{ userStore.isLogin ? `欢迎回来,${userStore.UserName}` : '尽情使用我的笔记!' }}</h1>
+      <el-avatar v-if="userStore.isLogin" :size="50" :src="userStore.UserInfo.avatar" />
+    </div>
+    <div class="d-flex justify-content-between">
       <button v-if="userStore.isLogin" class="btn btn-primary" @click="$router.push('/edit_note')">快速新建</button>
       <div>
         <button v-if="!userStore.isLogin" class="btn btn-primary" @click="$router.push('/login')">登录</button>
+        <button v-if="userStore.isLogin" class="btn btn-primary" @click="userStore.logout()">退出</button>
       </div>
     </div>
   </div>
