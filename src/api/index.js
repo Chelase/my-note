@@ -12,7 +12,7 @@ api.interceptors.request.use(
     (request) => {
         // 全局拦截请求发送前提交的参数
         const userStore = useUserStore()
-        // 设置请求头
+        // 设置请求头 token
         if (request.headers) {
             if (userStore.isLogin) {
                 request.headers.Authorization = `Bearer ${userStore.Token}`
