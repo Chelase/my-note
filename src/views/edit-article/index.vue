@@ -32,7 +32,9 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <editor-content :editor="editor" />
+    <div class="editor">
+      <editor-content :editor="editor" />
+    </div>
 
     <div v-if="editor">
       <bubble-menu
@@ -73,7 +75,7 @@ onBeforeUnmount(() => {
 
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 .title {
   min-height: 150px;
@@ -95,7 +97,7 @@ onBeforeUnmount(() => {
 
   textarea {
     width: 97%;
-    min-height: 100px;
+    max-height: 90px;
     border: none;
     outline: none;
     background: none;

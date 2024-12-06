@@ -6,15 +6,18 @@ import { preview } from 'vue3-image-preview'
 
 import "github-markdown-css"
 import noteApi from "@/api/modules/note.js";
+import Drawer from "@/components/drawer.vue";
 
 const router = useRouter()
 const NoteList = ref({})
 
 const noteId = router.currentRoute.value.query.id
 
+const openComment = ref(false)
+
 async function getNotes() {
   await noteApi.GetNote({id: noteId}).then(res => {
-    NoteList.value = res.note
+    NoteList.value = res.data
   })
   NoteList.value.createTime = NoteList.value.createTime.slice(0,10)
   if (NoteList.value.upDateTime)
@@ -53,10 +56,21 @@ onMounted(() => {
     addPhotoPreview()
   }
 });
+
+function upClose(row) {
+  openComment.value = row
+}
+
 </script>
 
 <template>
 <div class="box">
+  <div class="suspension-bar d-flex justify-content-around flex-column">
+    <div class="box-bi d-flex flex-column align-items-center" @click="openComment = true">
+      <i class="bi bi-chat-left"></i>
+      <p>8</p>
+    </div>
+  </div>
   <div class="container">
     <button class="btn btn-link" @click="$router.go(-1)">
       <i class="bi bi-arrow-left"></i>
@@ -65,15 +79,27 @@ onMounted(() => {
     <h1>{{ NoteList.title }}</h1>
     <div class="time-box">
       <p>{{ NoteList.createTime }}</p>
-      <p v-if="NoteList.upDateTime" style="text-align: right"> 于{{ NoteList.upDateTime }}修改 </p>
+      <p v-if="NoteList.upDateTime" style="text-align: right"> 于 {{ NoteList.upDateTime }} 修改 </p>
     </div>
     <hr>
     <div class="content" v-html="NoteList.content"></div>
   </div>
 </div>
+  <transition>
+    <drawer v-if="openComment" :open="openComment" :note-id="NoteList.id" @upClose="upClose" />
+  </transition>
 </template>
 
 <style scoped>
+
+.v-enter-active,.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,.v-leave-to {
+  opacity: 0;
+}
+
 .box {
   width: 100%;
   min-height: 100vh;
@@ -110,9 +136,31 @@ onMounted(() => {
   margin: 20px 0;
 }
 
+.suspension-bar {
+  width: 50px;
+  height: 300px;
+  position: fixed;
+  top: 200px;
+  left: 250px;
+  .box-bi {
+    width: 100%;
+    height: 40px;
+    cursor: pointer;
+    p {
+      font-size: .7rem;
+    }
+  }
+}
+
 @media (min-width: 1000px) {
   .container {
     width: 700px;
+  }
+}
+
+@media (max-width: 800px) {
+  .suspension-bar {
+    display: none !important;
   }
 }
 </style>
