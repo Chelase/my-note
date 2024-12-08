@@ -4,16 +4,20 @@ import {onMounted, ref} from "vue";
 import { marked } from "marked";
 import { preview } from 'vue3-image-preview'
 
-import "github-markdown-css"
 import noteApi from "@/api/modules/note.js";
+import commentApi from "@/api/modules/comment.js";
 import Drawer from "@/components/drawer.vue";
 
-const router = useRouter()
-const NoteList = ref({})
+import "github-markdown-css"
 
-const noteId = router.currentRoute.value.query.id
+const router = useRouter()
+
+const NoteList = ref({})
+const noteId = Number(router.currentRoute.value.query.id)
 
 const openComment = ref(false)
+const CommentList = ref([])
+const Total = ref(0)
 
 async function getNotes() {
   await noteApi.GetNote({id: noteId}).then(res => {
@@ -25,6 +29,15 @@ async function getNotes() {
   NoteList.value.content = marked(NoteList.value.content)
 }
 getNotes()
+
+async function getComment() {
+  const {data, total} = await commentApi.GetComment({id:noteId})
+  CommentList.value = data
+  Total.value = total
+  console.log(total);
+}
+
+getComment()
 
 onMounted(() => {
 
@@ -68,7 +81,7 @@ function upClose(row) {
   <div class="suspension-bar d-flex justify-content-around flex-column">
     <div class="box-bi d-flex flex-column align-items-center" @click="openComment = true">
       <i class="bi bi-chat-left"></i>
-      <p>8</p>
+      <p>{{Total}}</p>
     </div>
   </div>
   <div class="container">
@@ -86,7 +99,14 @@ function upClose(row) {
   </div>
 </div>
   <transition>
-    <drawer v-if="openComment" :open="openComment" :note-id="NoteList.id" @upClose="upClose" />
+    <drawer
+        v-if="openComment"
+        :open="openComment"
+        :list="CommentList"
+        :note-id="noteId"
+        @upClose="upClose"
+        @getComment="getComment"
+    />
   </transition>
 </template>
 

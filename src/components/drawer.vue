@@ -11,6 +11,13 @@ const props = defineProps({
     required: true,
     default: false
   },
+  list: {
+    type: Array,
+    required: true,
+    default: function () {
+      return [];
+    }
+  },
   noteId: {
     type: Number,
     required: true,
@@ -28,32 +35,24 @@ const props = defineProps({
 
 const userStore = useUserStore()
 
-const list = ref([])
-const total = ref(0)
 const content = ref('')
 
 const reviews = ref(['留下你精彩的评论吧','新的风暴已经出现、你的评论何时再现'])
 const reviewsIndex = Math.floor(Math.random()*reviews.value.length)
 
-// content.value = reviews.value[reviewsIndex]
+const emit = defineEmits(['upClose','getComment'])
 
 async function sendComment() {
   await commentApi.AddComment({noteId: props.noteId,userInfoId: userStore.UserId,content: content.value}).then(() => {
     ElMessage.success('发送成功')
     content.value = ''
   })
-  await getComment()
+  emit('getComment')
 }
 
-async function getComment() {
-  const {data, totalCount} = await commentApi.GetComment({id:props.noteId})
-  list.value = data
-  total.value = totalCount
+async function likeComment(id) {
+  await commentApi.LikeComment(id)
 }
-
-getComment()
-
-const emit = defineEmits(['upClose'])
 
 function close () {
   emit('upClose',false)
@@ -70,7 +69,7 @@ function close () {
         </div>
       </div>
     </div>
-    <div class="row m-auto">
+    <div class="center row m-auto">
       <div class="comment" v-for="item in list" :key="item.id">
         <div class="comment-list">
           <div class="avatar d-flex align-items-end pb-1 ">
@@ -80,38 +79,54 @@ function close () {
           <div class="content p-l-17">
             {{item.content}}
           </div>
-          <div class="content-bottom d-flex p-l-17">
+          <div class="content-bottom d-flex justify-content-around ">
             <div class="operation-box d-flex color-58">
-              <div class="operation">
-                <i class="bi bi-hand-thumbs-up"></i>
-                <i v-if="false" class="bi bi-hand-thumbs-up-fill"></i>
+              <div class="operation d-flex justify-content-around">
+                <i v-if="true" class="bi bi-hand-thumbs-up"></i>
+                <i v-else class="bi bi-hand-thumbs-up-fill"></i>
                 {{ item.likes }}
               </div>
-              <div class="operation">
-                <i class="bi bi-chat"></i>
+              <div class="operation d-flex justify-content-around">
+                <i class="bi bi-chat me-1"></i>
+                回复
               </div>
             </div>
             <div class="time color-58">{{item.createTime.substring(0,10)}}</div>
           </div>
-          <div class="unfold p-l-17 color-58">
+          <div v-if="item.replyNum > 0" class="unfold p-l-17 color-58">
             —— 展开 {{ item.replyNum }} 条回复
           </div>
         </div>
         <div class="comment-child"></div>
       </div>
     </div>
-    <div class="footer d-flex justify-content-center">
-      <el-input
-          v-model="content"
-          style="width: 240px"
-          :placeholder="reviews[reviewsIndex]"
-      />
-      <button class="btn btn-primary" @click="sendComment">发送</button>
+    <div class="footer d-flex justify-content-center align-items-center">
+      <div class="footer-input">
+        <el-input
+            v-model="content"
+            style="width: 240px;"
+            :placeholder="reviews[reviewsIndex]"
+        />
+        <button class="btn btn-primary" @click="sendComment">发送</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+
+.border-red {
+  border: 1px solid red;
+  &.blue {
+    border: 1px solid blue;
+  }
+  &.green {
+    border: 1px solid green;
+  }
+  &.yellow {
+    border: 1px solid yellow;
+  }
+}
 
 .p-l-17 {
   padding-left: 17%;
@@ -135,41 +150,69 @@ function close () {
   }
   .header {
     width: 100%;
+    height: 30px;
     .toolbar {
       .box-bi {
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         cursor: pointer;
+        .bi-x {
+          transform: scale(1.45);
+        }
       }
     }
   }
-  .comment {
-    width: 100%;
-    position: relative;
-    .comment-list {
-      .avatar {
-        width: 100%;
-      }
-      .content {
-        width: 100%;
-      }
-      .content-bottom {
-        width: 100%;
-        .operation-box {
-          flex: 3;
-          .operation {
+  .center {
+    overflow-y: scroll;
+    height: 100vh;
+    .comment {
+      width: 100%;
+      position: relative;
+      .comment-list {
+        padding: 5px;
+        .avatar {
+          width: 100%;
+        }
+        .content {
+          width: 100%;
+          padding-top: 5px;
+          padding-bottom: 5px;
+        }
+        .content-bottom {
+          width: 100%;
+          .operation-box {
+            .operation {
+              min-width: 40px;
+            }
           }
+          .time {}
         }
-        .time {
-          flex: 7;
+        .unfold {
+          padding-top: 5px;
+          padding-bottom: 5px;
         }
       }
-      .unfold {
 
+      .comment:last-child {
+        margin-bottom: 50px;
+        border: 1px solid red;
       }
+
     }
-
   }
-
+  .footer {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(11px);
+    -webkit-backdrop-filter: blur(11px);
+    border: 0.8px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.6);
+    .footer-input {}
+  }
 }
 </style>
