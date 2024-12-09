@@ -34,7 +34,6 @@ async function getComment() {
   const {data, total} = await commentApi.GetComment({id:noteId})
   CommentList.value = data
   Total.value = total
-  console.log(total);
 }
 
 getComment()
@@ -94,6 +93,22 @@ function upClose(row) {
       <p>{{ NoteList.createTime }}</p>
       <p v-if="NoteList.upDateTime" style="text-align: right"> 于 {{ NoteList.upDateTime }} 修改 </p>
     </div>
+    <div
+      class="
+        user-box
+        w-auto
+        mt-1
+        d-flex
+        align-items-center
+        justify-content-around"
+      @click="$router.push({path: '/user-info',query:{id:NoteList.userInfoId}})"
+      >
+      <el-avatar
+        size="50"
+        :src="NoteList.userAvatar"
+      />
+      <div>{{ NoteList.userName }}</div>
+    </div>
     <hr>
     <div class="content" v-html="NoteList.content"></div>
   </div>
@@ -136,6 +151,11 @@ function upClose(row) {
   height: 25px;
   display: flex;
   justify-content: space-between;
+}
+
+.user-box {
+  max-width: 8rem;
+  cursor: pointer;
 }
 
 .content {

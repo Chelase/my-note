@@ -57,7 +57,7 @@ async function likeComment(id) {
 function close () {
   emit('upClose',false)
 }
-
+// TODO 评论点赞、编辑、回复
 </script>
 
 <template>

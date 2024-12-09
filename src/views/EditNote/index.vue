@@ -105,7 +105,6 @@ async function saveNote () {
   else {
     NoteContent.value.content = vditor.value.getValue()
     NoteContent.value.userInfoId = userStore.UserId
-    NoteContent.value.userName = userStore.UserName
     await noteApi.AddNote(NoteContent.value).then( () => {
       ElMessage.success('保存成功')
       router.go(-1)

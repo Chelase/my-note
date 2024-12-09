@@ -27,12 +27,15 @@ const useUserStore = defineStore('user', () => {
         localStorage.setItem('UserInfo', JSON.stringify(UserInfo.value))
     }
 
-    // const GetUserInfo = async (id) => {
-    //     const { userInfo } = await userApi.userInfo(id)
-    //     UserInfo.value = userInfo
-    //     UserId.value = userInfo.userId
-    //     UserName.value = userInfo.name
-    // }
+    const GetUserInfo = async (id) => {
+        const { userInfo } = await userApi.userInfo(id)
+        UserInfo.value = userInfo
+        UserId.value = userInfo.userId
+        UserName.value = userInfo.userName
+        localStorage.setItem('UserId', UserId.value)
+        localStorage.setItem('UserName', UserName.value)
+        localStorage.setItem('UserInfo', JSON.stringify(UserInfo.value))
+    }
 
     const logout = async () => {
         localStorage.removeItem('Token')
@@ -59,6 +62,7 @@ const useUserStore = defineStore('user', () => {
         isLogin,
         register,
         Login,
+        GetUserInfo,
         logout,
         delUser
     }

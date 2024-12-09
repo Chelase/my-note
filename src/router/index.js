@@ -19,6 +19,16 @@ const router = createRouter({
       component: () => import('@/views/ViewNote/index.vue')
     },
     {
+      path: '/user-info',
+      name: 'user-info',
+      component: () => import('@/views/userInfo/index.vue')
+    },
+    {
+      path: '/user-edit',
+      name: 'user-edit',
+      component: () => import('@/views/userInfo/edit.vue')
+    },
+    {
       path: '/edit-article',
       name: 'edit-article',
       component: () => import('@/views/edit-article/index.vue')
