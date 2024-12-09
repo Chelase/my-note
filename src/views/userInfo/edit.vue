@@ -27,34 +27,16 @@ const headers = ref({
 async function updateUserInfo() {
   await userApi.userEdit(UserInfo.value)
   await userStore.GetUserInfo(userStore.UserId)
+  ElMessage.success('保存成功')
 }
 
-function consoleFile() {
-  console.log(fileList.value);
+function updateAvatar(uploadFile) {
+  avatar.value = uploadFile.data[0]
+  UserInfo.value.avatar = avatar.value
 }
 
-function uploadAvatar() {
-  console.log(fileList.value)
-}
-
-// 上传
-const handleChange = (rawFile) => {
-  if (rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
-    ElMessage.error("只能上传jpeg/jpg/png图片");
-    return false;
-  } else if (rawFile.size / 1024 / 1024 > 1) {
-    ElMessage.error("上传图片最大不超过1MB!");
-    return false;
-  }
-  return true;
-};
-const handleUpload = async (file) => {
-  let fd = new FormData();
-  fd.append("file", file.file);
-  // 这里是请求上传接口
-  let result = await publicApi.uploadPhoto(fd);
-
-  console.log(57,result);
+const handleExceed = () => {
+  fileList.value = []
 }
 
 </script>
@@ -71,43 +53,51 @@ const handleUpload = async (file) => {
     <!--      </div>-->
 
     <div class="top w-100">
-<!--      <el-upload-->
-<!--          v-model:file-list="fileList"-->
-<!--          class="upload-demo"-->
-<!--          :action="url+'/Public/UploadPhoto'"-->
-<!--          :limit="1"-->
-<!--          :headers="headers"-->
-<!--          :show-file-list="false"-->
-<!--          @on-success="consoleFile"-->
-<!--      >-->
-<!--        <div class="avatar-box">-->
-<!--          <el-avatar-->
-<!--              style="cursor: pointer"-->
-<!--              v-if="userStore.isLogin"-->
-<!--              :size="100"-->
-<!--              :src="UserInfo.avatar"-->
-<!--          />-->
-<!--          <i class="bi bi-camera"></i>-->
-<!--        </div>-->
-<!--      </el-upload>-->
-
       <el-upload
-          class="avatar-uploader"
-          action="#"
+          v-model:file-list="fileList"
+          class="upload-demo"
+          :action="url+'/Public/UploadPhoto'"
           :limit="1"
+          name="files"
+          :headers="headers"
           :show-file-list="false"
-          :http-request="handleUpload"
-          :before-upload="handleChange"
-          accept=".png,.jpe,.jpeg"
-          ref="uploadBanner"
+          :on-success="updateAvatar"
+          :on-change="handleExceed"
       >
-        <el-avatar
-            style="cursor: pointer"
-            v-if="userStore.isLogin"
-            :size="100"
-            :src="UserInfo.avatar"
-        />
+        <div class="avatar-box">
+          <el-avatar
+              style="cursor: pointer"
+              v-if="avatar"
+              :size="100"
+              :src="avatar"
+          />
+          <el-avatar
+              style="cursor: pointer"
+              v-else
+              :size="100"
+              :src="UserInfo.avatar"
+          />
+          <i class="bi bi-camera"></i>
+        </div>
       </el-upload>
+
+<!--      <el-upload-->
+<!--          class="avatar-uploader"-->
+<!--          action="#"-->
+<!--          :limit="1"-->
+<!--          :show-file-list="false"-->
+<!--          :http-request="handleUpload"-->
+<!--          :before-upload="handleChange"-->
+<!--          accept=".png,.jpe,.jpeg"-->
+<!--          ref="uploadBanner"-->
+<!--      >-->
+<!--        <el-avatar-->
+<!--            style="cursor: pointer"-->
+<!--            v-if="userStore.isLogin"-->
+<!--            :size="100"-->
+<!--            :src="UserInfo.avatar"-->
+<!--        />-->
+<!--      </el-upload>-->
 
       <div class="">
         <span>{{UserInfo.userName}}</span> &nbsp

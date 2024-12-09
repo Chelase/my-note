@@ -8,7 +8,6 @@ const userStore = useUserStore()
 
 const NoteList = ref({})
 const NoteForm = ref({
-  id: 0,
   page: 1,
   size: 6
 })
@@ -101,7 +100,7 @@ getNotes()
           :page-size="NoteForm.size"
           background
           layout="prev, pager, next, jumper"
-          :total="NoteList.totalCount"
+          :total="NoteList.total"
           @current-change="handleCurrentChange"
       />
     </div>
