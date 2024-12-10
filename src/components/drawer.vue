@@ -3,6 +3,7 @@ import {ref} from 'vue'
 import {ElMessage} from 'element-plus'
 
 import commentApi from '@/api/modules/comment.js'
+import publicApi from '@/api/modules/public.js'
 import useUserStore from '@/stores/user.js'
 
 const props = defineProps({
@@ -51,7 +52,12 @@ async function sendComment() {
 }
 
 async function likeComment(id) {
-  await commentApi.LikeComment(id)
+  await publicApi.likes({
+    userInfoId: userStore.UserId,
+    contentType: 'Comment',
+    likeId: id
+  })
+  emit('getComment')
 }
 
 function close () {
@@ -82,8 +88,8 @@ function close () {
           <div class="content-bottom d-flex justify-content-around ">
             <div class="operation-box d-flex color-58">
               <div class="operation d-flex justify-content-around">
-                <i v-if="true" class="bi bi-hand-thumbs-up"></i>
-                <i v-else class="bi bi-hand-thumbs-up-fill"></i>
+                <i v-if="true" class="bi bi-hand-thumbs-up" @click="likeComment(item.id)"></i>
+                <i v-else class="bi bi-hand-thumbs-up-fill" @click="likeComment(item.id)"></i>
                 {{ item.likes }}
               </div>
               <div class="operation d-flex justify-content-around">
@@ -136,6 +142,10 @@ function close () {
   color: #585858;
 }
 
+.bi {
+  cursor: pointer;
+}
+
 .drawer {
   width: 27%;
   height: 100vh;
@@ -155,7 +165,6 @@ function close () {
       .box-bi {
         width: 30px;
         height: 30px;
-        cursor: pointer;
         .bi-x {
           transform: scale(1.45);
         }

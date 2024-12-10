@@ -25,14 +25,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     }
-  },
-  // devServer: {
-  //   proxy: {
-  //     "/api": {
-  //       target: "https://note-api.timewishtips.cn",
-  //       pathRewrite: { "^/api": "" },
-  //     },
-  //   }
-  // }, //配置转发
-
+  }
 })

@@ -1,16 +1,19 @@
 <script setup>
 import { useRouter } from "vue-router";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import { marked } from "marked";
 import { preview } from 'vue3-image-preview'
 
 import noteApi from "@/api/modules/note.js";
 import commentApi from "@/api/modules/comment.js";
+import publicApi from "@/api/modules/public.js";
+import useUserStore from '@/stores/user.js'
+
 import Drawer from "@/components/drawer.vue";
 
 import "github-markdown-css"
-
 const router = useRouter()
+const userStore = useUserStore()
 
 const NoteList = ref({})
 const noteId = Number(router.currentRoute.value.query.id)
@@ -18,6 +21,8 @@ const noteId = Number(router.currentRoute.value.query.id)
 const openComment = ref(false)
 const CommentList = ref([])
 const Total = ref(0)
+
+const likes = ref([])
 
 async function getNotes() {
   await noteApi.GetNote({id: noteId}).then(res => {
@@ -73,6 +78,30 @@ function upClose(row) {
   openComment.value = row
 }
 
+async function likeArticle() {
+  await publicApi.likes({
+    userInfoId: userStore.UserId,
+    contentType: 'Article',
+    likeId: noteId
+  })
+  await getNotes()
+  await getLikes()
+}
+
+async function getLikes() {
+  const { data } = await publicApi.GetLikes({
+    userInfoId: userStore.UserId,
+    contentType: 'Article'
+  })
+  likes.value = data
+}
+
+if (userStore.isLogin) getLikes()
+
+const isLike = computed(() => {
+  return likes.value.find(item => item.likeId === noteId);
+})
+
 </script>
 
 <template>
@@ -81,6 +110,11 @@ function upClose(row) {
     <div class="box-bi d-flex flex-column align-items-center" @click="openComment = true">
       <i class="bi bi-chat-left"></i>
       <p>{{Total}}</p>
+    </div>
+    <div class="box-bi d-flex flex-column align-items-center">
+      <i v-if="!isLike" class="bi bi-hand-thumbs-up" @click="likeArticle"></i>
+      <i v-else class="bi bi-hand-thumbs-up-fill" @click="likeArticle"></i>
+      <p>{{NoteList.likes}}</p>
     </div>
   </div>
   <div class="container">
