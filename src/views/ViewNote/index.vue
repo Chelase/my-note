@@ -22,10 +22,8 @@ const openComment = ref(false)
 const CommentList = ref([])
 const Total = ref(0)
 
-const likes = ref([])
-
 async function getNotes() {
-  await noteApi.GetNote({id: noteId}).then(res => {
+  await noteApi.GetNote({id: noteId,userInfoId: userStore.UserId}).then(res => {
     NoteList.value = res.data
   })
   NoteList.value.createTime = NoteList.value.createTime.slice(0,10)
@@ -36,7 +34,7 @@ async function getNotes() {
 getNotes()
 
 async function getComment() {
-  const {data, total} = await commentApi.GetComment({id:noteId})
+  const {data, total} = await commentApi.GetComment({id:noteId,userInfoId: userStore.UserId,})
   CommentList.value = data
   Total.value = total
 }
@@ -85,22 +83,7 @@ async function likeArticle() {
     likeId: noteId
   })
   await getNotes()
-  await getLikes()
 }
-
-async function getLikes() {
-  const { data } = await publicApi.GetLikes({
-    userInfoId: userStore.UserId,
-    contentType: 'Article'
-  })
-  likes.value = data
-}
-
-if (userStore.isLogin) getLikes()
-
-const isLike = computed(() => {
-  return likes.value.find(item => item.likeId === noteId);
-})
 
 </script>
 
@@ -112,8 +95,8 @@ const isLike = computed(() => {
       <p>{{Total}}</p>
     </div>
     <div class="box-bi d-flex flex-column align-items-center">
-      <i v-if="!isLike" class="bi bi-hand-thumbs-up" @click="likeArticle"></i>
-      <i v-else class="bi bi-hand-thumbs-up-fill" @click="likeArticle"></i>
+      <i v-if="NoteList.likeStatus" class="bi bi-hand-thumbs-up-fill" @click="likeArticle"></i>
+      <i v-else class="bi bi-hand-thumbs-up" @click="likeArticle"></i>
       <p>{{NoteList.likes}}</p>
     </div>
   </div>

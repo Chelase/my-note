@@ -88,8 +88,8 @@ function close () {
           <div class="content-bottom d-flex justify-content-around ">
             <div class="operation-box d-flex color-58">
               <div class="operation d-flex justify-content-around">
-                <i v-if="true" class="bi bi-hand-thumbs-up" @click="likeComment(item.id)"></i>
-                <i v-else class="bi bi-hand-thumbs-up-fill" @click="likeComment(item.id)"></i>
+                <i v-if="item.likeStatus" class="bi bi-hand-thumbs-up-fill" @click="likeComment(item.id)"></i>
+                <i v-else class="bi bi-hand-thumbs-up" @click="likeComment(item.id)"></i>
                 {{ item.likes }}
               </div>
               <div class="operation d-flex justify-content-around">

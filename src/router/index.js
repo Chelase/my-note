@@ -9,6 +9,11 @@ const router = createRouter({
       component: () => import('@/views/index.vue')
     },
     {
+      path: '/chat-hall',
+      name: 'chat-hall',
+      component: () => import('@/views/ChatHall/index.vue')
+    },
+    {
       path: '/edit_note',
       name: 'edit_note',
       component: () => import('@/views/EditNote/index.vue')

@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
     "@tiptap/core": "^2.9.1",
     "@tiptap/extension-highlight": "^2.9.1",
     "@tiptap/extension-typography": "^2.9.1",
