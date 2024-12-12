@@ -38,7 +38,8 @@ const userStore = useUserStore()
 
 const content = ref('')
 
-const reviews = ref(['留下你精彩的评论吧','新的风暴已经出现、你的评论何时再现'])
+const reviews = ref(['留下你精彩的评论吧','新的风暴已经出现、你的评论何时再现',
+  '你猜我的评论区在等待谁？',])
 const reviewsIndex = Math.floor(Math.random()*reviews.value.length)
 
 const emit = defineEmits(['upClose','getComment'])
@@ -132,18 +133,6 @@ function close () {
   &.yellow {
     border: 1px solid yellow;
   }
-}
-
-.p-l-17 {
-  padding-left: 17%;
-}
-
-.color-58 {
-  color: #585858;
-}
-
-.bi {
-  cursor: pointer;
 }
 
 .drawer {

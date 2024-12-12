@@ -7,17 +7,16 @@ import {storeToRefs} from "pinia"
 
 const userStore = useUserStore()
 const url = import.meta.env.VITE_APP_API_BASEURL
-const { UserId, UserName } = storeToRefs(userStore)
+const { UserId } = storeToRefs(userStore)
 const data = ref({
-  userId: UserId,
-  userName: UserName,
+  userInfoId: UserId,
   msg: '',
 })
 
 const MsgList = ref([])
 
 const connection = new HubConnectionBuilder()
-    .withUrl(`https://localhost:5001/MessageHub`)
+    .withUrl(`${url}/MessageHub`)
     .build();
 
 connection.start()
@@ -29,7 +28,7 @@ connection.start()
 connection.on('ReceiveMessage', message => {
   MsgList.value.push(message)
   console.log('Received message:', message);
-  // message.sendTime = message.sendTime.slice(11)
+  message.createTime = message.createTime.slice(11)
   console.log(33,MsgList.value);
 });
 
@@ -37,7 +36,8 @@ onMounted(() => getMsg())
 
 async function getMsg() {
   const { list } = await MessageApi.getMessage()
-  MsgList.value = list
+  if (list)
+    MsgList.value = list
   console.log(MsgList.value);
 }
 
@@ -50,34 +50,51 @@ async function sendMsg () {
 </script>
 
 <template>
-  <div>
-    <input
-        v-model="data.msg"
-        type="text"
-        placeholder="请输入"
-        class="input
-        input-bordered
-        input-info
-        w-full
-        max-w-xs"
-    />
-    <button class="btn btn-primary" @click="sendMsg()">发送</button>
-  </div>
-  <div class="chat" :class="userStore.UserId != item.userId ? 'chat-start' : 'chat-end'" v-for="item in MsgList" :key="item.id">
-    <div class="chat-image avatar">
-      <div class="w-10 rounded-full">
-        <img alt="Tailwind CSS chat bubble component"
-             src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+  <div class="container">
+    <div class="chat" v-for="item in MsgList" :key="item.id">
+      <div class="chat-info d-flex" v-if="userStore.UserId !== item.userInfoId">
+        <div class="w-10">
+          <el-avatar :size="50" :src="item.userAvatar" />
+        </div>
+        <div class="w-auto">
+            <span> &nbsp {{item.userName}} &nbsp </span>
+          <time class="text-xs opacity-50">{{item.createTime}}</time>
+          <div class="chat-bubble"> &nbsp {{item.msg}}</div>
+        </div>
+      </div>
+      <div class="chat-info d-flex justify-content-end" v-else>
+        <div class="w-auto">
+          <time class="text-xs opacity-50">{{item.createTime}}</time>
+          <span> &nbsp {{item.userName}} &nbsp </span>
+          <div class="chat-bubble" style="text-align: right"> {{item.msg}} &nbsp</div>
+        </div>
+        <div class="w-10">
+          <el-avatar :size="50" :src="item.userAvatar" />
+        </div>
       </div>
     </div>
-    <div class="chat-header">
-      {{item.userName}}
-      <time class="text-xs opacity-50">{{item.sendTime}}</time>
+    <div class="bottom-input">
+      <el-input
+          v-model="data.msg"
+          style="width: 240px;"
+          placeholder="请输入"
+      />
+      <button class="btn btn-primary" @click="sendMsg()">发送</button>
     </div>
-    <div class="chat-bubble" :class="userStore.UserId != item.userId ? '' : 'chat-bubble-info'">{{item.msg}}</div>
   </div>
 </template>
 
 <style scoped>
-
+  .chat {
+    display: flex;
+    .chat-info {
+      width: 100%;
+    }
+  }
+  .bottom-input {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 </style>

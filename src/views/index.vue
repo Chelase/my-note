@@ -59,8 +59,10 @@ getNotes()
       />
     </div>
     <div class="d-flex justify-content-between">
-      <button v-if="userStore.isLogin" class="btn btn-primary" @click="$router.push('/edit_note')">快速新建</button>
-      <button v-if="userStore.isLogin" class="btn btn-primary" @click="$router.push('/chat-hall')">前往聊天大厅</button>
+      <div class="w-auto">
+        <button v-if="userStore.isLogin" class="btn btn-primary me-3" @click="$router.push('/edit_note')">快速新建</button>
+        <button v-if="userStore.isLogin" class="btn btn-primary" @click="$router.push('/chat-hall')">前往聊天大厅</button>
+      </div>
       <div>
         <button v-if="!userStore.isLogin" class="btn btn-primary" @click="$router.push('/login')">登录</button>
         <button v-if="userStore.isLogin" class="btn btn-primary" @click="userStore.logout()">退出</button>

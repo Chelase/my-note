@@ -7,6 +7,18 @@
   font-weight: normal;
 }
 
+.p-l-17 {
+  padding-left: 17%;
+}
+
+.color-58 {
+  color: #585858;
+}
+
+.bi {
+  cursor: pointer;
+}
+
 pre {
   background-color: #282C34;
   padding: 10px;

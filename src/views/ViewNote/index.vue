@@ -10,6 +10,7 @@ import publicApi from "@/api/modules/public.js";
 import useUserStore from '@/stores/user.js'
 
 import Drawer from "@/components/drawer.vue";
+import mComment from '@/components/m-comment.vue'
 
 import "github-markdown-css"
 const router = useRouter()
@@ -85,6 +86,8 @@ async function likeArticle() {
   await getNotes()
 }
 
+const isPhone = computed(() => window.innerWidth < 800)
+
 </script>
 
 <template>
@@ -121,13 +124,20 @@ async function likeArticle() {
       @click="$router.push({path: '/user-info',query:{id:NoteList.userInfoId}})"
       >
       <el-avatar
-        size="50"
+        :size="50"
         :src="NoteList.userAvatar"
       />
       <div>{{ NoteList.userName }}</div>
     </div>
     <hr>
     <div class="content" v-html="NoteList.content"></div>
+    <mComment
+        v-if="isPhone"
+        :open="isPhone"
+        :list="CommentList"
+        :note-id="noteId"
+        @getComment="getComment"
+    />
   </div>
 </div>
   <transition>
