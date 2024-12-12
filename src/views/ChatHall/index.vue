@@ -32,7 +32,7 @@ connection.on('ReceiveMessage', message => {
   console.log(33,MsgList.value);
 });
 
-onMounted(() => getMsg())
+// onMounted(() => getMsg())
 
 async function getMsg() {
   const { list } = await MessageApi.getMessage()
