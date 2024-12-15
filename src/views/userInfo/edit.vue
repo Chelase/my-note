@@ -31,12 +31,23 @@ async function updateUserInfo() {
 }
 
 function updateAvatar(uploadFile) {
+  console.log(uploadFile);
   avatar.value = uploadFile.data[0]
   UserInfo.value.avatar = avatar.value
 }
 
 const handleExceed = () => {
   fileList.value = []
+}
+
+function upload(param) {
+  const formData = new FormData()
+  formData.append('file', param.file)
+  publicApi.uploadPhoto(formData).then(res => {
+    updateAvatar(res)
+  }).catch(error => {
+    console.log(error);
+  })
 }
 
 </script>
@@ -57,8 +68,9 @@ const handleExceed = () => {
           v-model:file-list="fileList"
           class="upload-demo"
           :action="url+'/Public/UploadPhoto'"
+          :http-request="upload"
           :limit="1"
-          name="files"
+          name="file"
           :headers="headers"
           :show-file-list="false"
           :on-success="updateAvatar"

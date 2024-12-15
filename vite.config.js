@@ -25,5 +25,20 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     }
-  }
+  },
+  // dev: {
+  //   // assetsSubDirectory: 'static',
+  //   // assetsPublicPath: '/',
+  //   // proxyTable: {},
+  //   proxyTable: {
+  //     '/api': {
+  //       target: 'https://note-api.timewishtips.cn/',
+  //       secure: false,
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/api': ''
+  //       }
+  //     },
+  //   },
+  // }
 })
