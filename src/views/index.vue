@@ -61,6 +61,7 @@ getNotes()
     <div class="d-flex justify-content-between">
       <div class="w-auto">
         <button v-if="userStore.isLogin" class="btn btn-primary me-3" @click="$router.push('/edit_note')">快速新建</button>
+        <button v-if="userStore.isLogin" class="btn btn-primary me-3" @click="$router.push('/edit-article')">使用轻量化编辑器</button>
         <button v-if="userStore.isLogin" class="btn btn-primary" @click="$router.push('/chat-hall')">前往聊天大厅</button>
       </div>
       <div>
@@ -75,21 +76,22 @@ getNotes()
       <div class="col-md-6" v-for="item in NoteList.data" :key="item.id" style="max-width: 540px;">
         <div class="card mb-3">
           <div class="row g-0" style="min-height: 128px">
-            <div class="">
-              <div class="card-body" style="max-width: 400px">
-                <h5 class="card-title" @click="$router.push({path:'/view_note',query: {id: item.id}})">{{ item.title }}</h5>
-                 <div class="d-sm-flex justify-content-between">
-                   <p class="card-text">{{ item.userName }}</p>
-                   <p class="card-text"><small class="text-muted">{{ item.createTime.slice(0,10) }}</small></p>
-                 </div>
-                <div class="hidden-operation" v-if="userStore.UserId === item.userInfoId">
-                  <button class="btn btn-outline-primary" @click="$router.push({path:'/edit_note',query: {id: item.id}})">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button class="btn btn-outline-danger" @click="del(item.id)">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
+<!--            <div class="col-md-4" v-if="item.cover">-->
+<!--              <img :src="item.cover" class="img-fluid rounded-start" alt="封面">-->
+<!--            </div>-->
+            <div class="card-body" style="max-width: 400px">
+              <h5 class="card-title" @click="$router.push({path:'/view_note',query: {id: item.id}})">{{ item.title }}</h5>
+              <div class="d-sm-flex justify-content-between">
+                <p class="card-text">{{ item.userName }}</p>
+                <p class="card-text"><small class="text-muted">{{ item.createTime.slice(0,10) }}</small></p>
+              </div>
+              <div class="hidden-operation" v-if="userStore.UserId === item.userInfoId">
+                <button class="btn btn-outline-primary" @click="$router.push({path:'/edit_note',query: {id: item.id}})">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-outline-danger" @click="del(item.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
               </div>
             </div>
           </div>

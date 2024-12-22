@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {ElMessage} from 'element-plus'
 
 import commentApi from '@/api/modules/comment.js'
@@ -64,7 +64,23 @@ async function likeComment(id) {
 function close () {
   emit('upClose',false)
 }
-// TODO 评论点赞、编辑、回复
+
+const handleKeyDown = (event) => {
+  console.log(event);
+  if (event.keyCode === 13) {
+    sendComment()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeyDown)
+})
+
+// TODO 评论编辑、回复
 </script>
 
 <template>

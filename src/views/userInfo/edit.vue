@@ -68,7 +68,6 @@ function upload(param) {
           v-model:file-list="fileList"
           class="upload-demo"
           :action="url+'/Public/UploadPhoto'"
-          :http-request="upload"
           :limit="1"
           name="file"
           :headers="headers"

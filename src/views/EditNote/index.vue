@@ -8,6 +8,10 @@ import noteApi from '@/api/modules/note.js'
 import useUserStore from '@/stores/user.js'
 
 const userStore = useUserStore()
+const url = import.meta.env.VITE_APP_API_BASEURL
+const headers = ref({
+  Authorization: "Bearer " + userStore.Token
+})
 
 const vditor = ref()
 const NoteContent = ref({
@@ -95,7 +99,19 @@ function initializeVditor() {
     model: 'ir',
     after() {
       vditor.value.setValue(NoteContent.value.content);
-    }
+    },
+    upload: {
+      accept: 'image/*,.mp3, .wav, .rar',
+      token: "Bearer " + userStore.Token,
+      headers: headers,
+      url: url+'/Public/UploadPhoto',
+      // linkToImgUrl: '/api/upload/fetch', // 可将站外图片地址传到服务端进行保存处理
+      filename (name) {
+        return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').
+        replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').
+        replace('/\\s/g', '')
+      },
+    },
   });
 }
 

@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {ElMessage} from 'element-plus'
 
 import commentApi from '@/api/modules/comment.js'
@@ -48,11 +48,14 @@ const reviewsIndex = Math.floor(Math.random()*reviews.value.length)
 const emit = defineEmits(['upClose','getComment'])
 
 async function sendComment() {
-  await commentApi.AddComment({noteId: props.noteId,userInfoId: userStore.UserId,content: content.value}).then(() => {
-    ElMessage.success('发送成功')
+  if (content.value) {
+    await commentApi.AddComment({noteId: props.noteId,userInfoId: userStore.UserId,content: content.value}).then(() => {
+      ElMessage.success('发送成功')
+      content.value = ''
+    })
     content.value = ''
-  })
-  emit('getComment')
+    emit('getComment')
+  }
 }
 
 async function likeComment(id) {
@@ -64,7 +67,7 @@ async function likeComment(id) {
   emit('getComment')
 }
 
-// TODO 评论点赞、编辑、回复
+// TODO 评论编辑、回复
 </script>
 
 <template>

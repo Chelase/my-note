@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import MessageApi from '@/api/modules/Message.js'
 import { HubConnectionBuilder } from '@microsoft/signalr'
 import useUserStore from "@/stores/user.js"
@@ -47,6 +47,22 @@ async function sendMsg () {
     data.value.msg = ''
   }
 }
+
+const handleKeyDown = (event) => {
+  console.log(event);
+  if (event.keyCode === 13) {
+    sendMsg()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeyDown)
+})
+
 </script>
 
 <template>
