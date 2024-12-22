@@ -123,7 +123,7 @@ async function saveNote () {
     NoteContent.value.userInfoId = userStore.UserId
     await noteApi.AddNote(NoteContent.value).then( () => {
       ElMessage.success('保存成功')
-      router.go(-1)
+      router.back()
     })
   }
 }
@@ -132,7 +132,7 @@ async function saveNote () {
 <template>
   <div class="container border" style="padding-bottom: 20px">
     <div class="top-nav">
-      <button class="btn btn-link" @click="$router.go(-1)">
+      <button class="btn btn-link" @click="$router.back()">
         <i class="bi bi-arrow-left"></i>
         返回
       </button>

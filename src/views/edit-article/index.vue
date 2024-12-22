@@ -98,6 +98,10 @@ onBeforeUnmount(() => {
 <template>
   <input type="file" id="fileInput" style="display: none;" accept="image/*">
   <div class="container">
+    <button class="btn btn-link" @click="$router.back()">
+      <i class="bi bi-arrow-left"></i>
+      返回
+    </button>
     <div class="title d-flex justify-content-between align-items-end">
       <div class="cover-photo">
         <img v-if="article.cover" :src="article.cover" alt="">
