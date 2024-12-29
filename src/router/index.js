@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('@/views/edit-article/index.vue')
     },
     {
+      path: '/map',
+      name: 'map',
+      component: () => import('@/views/map/index.vue'),
+    },
+    {
       path: '/:all(.*)*',
       name: 'not_found',
       component: () => import('@/views/NotFound.vue')
