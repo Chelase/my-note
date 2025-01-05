@@ -1,3 +1,4 @@
+import {VueNodeViewRenderer} from "@tiptap/vue-3";
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import Typography from '@tiptap/extension-typography'
@@ -5,7 +6,7 @@ import Image from '@tiptap/extension-image'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 
 import CodeBlockComponent from '@/components/CodeBlockComponent.vue'
-import {VueNodeViewRenderer} from "@tiptap/vue-3";
+import VideoEmbed from './modules/web-video.js'
 import { all, createLowlight } from 'lowlight'
 
 const lowlight = createLowlight(all)
@@ -24,6 +25,7 @@ const TipTapPlugin = {
                 },
             })
             .configure({ lowlight }),
+        VideoEmbed,
     ],
     // 设置初始内容
     content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',

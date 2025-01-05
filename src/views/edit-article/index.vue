@@ -45,6 +45,22 @@ function uploadCover() {
   }, { once: true }); // 使用 { once: true } 确保事件监听器只触发一次
 }
 
+function insertVideo() {
+  let url = prompt('请输入视频链接', '')
+  const videoId = extractVideoId(url); // 提取视频 ID 的函数
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`; // YouTube 嵌入链接
+
+  editor.chain().focus().setVideoEmbed({ src: embedUrl }).run();
+}
+
+// 提取视频 ID 的简单示例
+function extractVideoId(url) {
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+
 function addImage() {
   const fileInput = document.getElementById('fileInput');
   fileInput.click();
@@ -139,6 +155,7 @@ onBeforeUnmount(() => {
           删除线
         </button>
         <button @click="addImage">上传图片</button>
+        <button @click="insertVideo()">插入网络视频</button>
       </bubble-menu>
 
       <floating-menu
@@ -156,6 +173,7 @@ onBeforeUnmount(() => {
           无序列表
         </button>
         <button @click="addImage">上传图片</button>
+        <button @click="insertVideo()">插入网络视频</button>
       </floating-menu>
     </div>
 
