@@ -122,9 +122,9 @@ const addBilibili = () => {
 
 const addTiktok = async () => {
   const url = prompt('请输入抖音视频链接')
-  const vid = url.match(/v.douyin.com\/([^/]+)/)[1];
-  const res = await otherApi.getTiktokVideo(vid)
-  console.log(res);
+  const vid = url.match(/douyin.com\/video\/([^/]+)/)[1];
+  const { data: { iframe_code } } = await otherApi.getTiktokVideo(vid)
+  console.log(iframe_code);
 }
 
 async function saveNote () {
