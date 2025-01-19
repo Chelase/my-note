@@ -1,8 +1,9 @@
 <script setup>
 import {ref, onBeforeMount, onBeforeUnmount} from 'vue'
-import TipTapPlugin from '@/utils/tiptap/index.js'
+import { TipTapPlugin } from '@/utils/tiptap/index.js'
 import {useEditor, EditorContent, BubbleMenu, FloatingMenu} from '@tiptap/vue-3'
 import publicApi from "@/api/modules/public.js";
+import otherApi from '@/api/modules/other.js'
 import router from "@/router/index.js";
 import noteApi from "@/api/modules/note.js";
 import {ElMessage} from "element-plus";
@@ -16,6 +17,8 @@ const article = ref({
 })
 const editor = useEditor(TipTapPlugin)
 const userStore = useUserStore()
+const width = ref(640)
+const height = ref(480)
 // const noteId = router.currentRoute.value.query.id
 
 // async function editNote() {
@@ -91,6 +94,39 @@ function addImage() {
   }, { once: true }); // 使用 { once: true } 确保事件监听器只触发一次
 }
 
+const addYoutube = () => {
+  const url = prompt('请输入youtube视频链接')
+
+  editor.value.commands.setYoutubeVideo({
+    src: url,
+    width: Math.max(320, parseInt(width.value, 10)) || 640,
+    height: Math.max(180, parseInt(height.value, 10)) || 480,
+    margin: 'auto'
+  })
+}
+
+const addBilibili = () => {
+  const url = prompt('请输入bilibili视频链接')
+  const bvid = url.match(/video\/([^/]+)/)[1]; // 提取 Bilibili 视频 ID
+
+  editor.value.commands.insertContent({
+    type: 'video',
+    attrs: {
+      src: `https://player.bilibili.com/player.html?bvid=${bvid}`, // 生成嵌入链接
+      width: 640,
+      height: 360,
+      bvid: bvid, // 存储 Bilibili 视频 ID
+    },
+  });
+}
+
+const addTiktok = async () => {
+  const url = prompt('请输入抖音视频链接')
+  const vid = url.match(/v.douyin.com\/([^/]+)/)[1];
+  const res = await otherApi.getTiktokVideo(vid)
+  console.log(res);
+}
+
 async function saveNote () {
   console.log(editor.value.getHTML());
   if (article.value.title === '')
@@ -156,6 +192,15 @@ onBeforeUnmount(() => {
         </button>
         <button @click="addImage">上传图片</button>
         <button @click="insertVideo()">插入网络视频</button>
+        <button id="youtube" @click="addYoutube()">
+          嵌入youtube视频
+        </button>
+        <button id="bilibili" @click="addBilibili()">
+          嵌入bilibili视频
+        </button>
+        <button id="tiktok" @click="addTiktok()">
+          嵌入抖音视频
+        </button>
       </bubble-menu>
 
       <floating-menu
@@ -174,12 +219,20 @@ onBeforeUnmount(() => {
         </button>
         <button @click="addImage">上传图片</button>
         <button @click="insertVideo()">插入网络视频</button>
+        <button id="youtube" @click="addYoutube()">
+          嵌入youtube视频
+        </button>
+        <button id="bilibili" @click="addBilibili()">
+          嵌入bilibili视频
+        </button>
+        <button id="tiktok" @click="addTiktok()">
+          嵌入抖音视频
+        </button>
       </floating-menu>
     </div>
 
 <!--    <ElButton @click="testHtml">测试HTML</ElButton>-->
   </div>
-
 </template>
 
 <style scoped lang="scss">
