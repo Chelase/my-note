@@ -8,6 +8,7 @@ import Youtube from '@tiptap/extension-youtube'
 
 import CodeBlockComponent from '@/components/CodeBlockComponent.vue'
 import VideoEmbed from './modules/web-video.js'
+import Iframe from './modules/iframe.js'
 import { all, createLowlight } from 'lowlight'
 
 const lowlight = createLowlight(all)
@@ -33,6 +34,7 @@ export const TipTapPlugin = {
             nocookie: true,
         }),
         VideoEmbed,
+        Iframe,
     ],
     // 设置初始内容
     content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',

@@ -127,6 +127,20 @@ const addTiktok = async () => {
   console.log(iframe_code);
 }
 
+const addWeb = () => {
+  const url = prompt('请输入网站地址')
+  editor.value.commands.insertContent({
+    type: 'iframe',
+    attrs: {
+      src: url,
+      width: 640,
+      height: 360,
+      frameborder: '0',
+      allowfullscreen: 'true',
+    },
+  });
+}
+
 async function saveNote () {
   console.log(editor.value.getHTML());
   if (article.value.title === '')
@@ -201,6 +215,9 @@ onBeforeUnmount(() => {
         <button id="tiktok" @click="addTiktok()">
           嵌入抖音视频
         </button>
+        <button id="web" @click="addWeb()">
+          嵌入网站
+        </button>
       </bubble-menu>
 
       <floating-menu
@@ -227,6 +244,9 @@ onBeforeUnmount(() => {
         </button>
         <button id="tiktok" @click="addTiktok()">
           嵌入抖音视频
+        </button>
+        <button id="web" @click="addWeb()">
+          嵌入网站
         </button>
       </floating-menu>
     </div>
