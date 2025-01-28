@@ -13,6 +13,7 @@ import Drawer from "@/components/drawer.vue";
 import mComment from '@/components/m-comment.vue'
 
 import "github-markdown-css"
+import {ElMessage} from "element-plus";
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -24,7 +25,7 @@ const CommentList = ref([])
 const Total = ref(0)
 
 async function getNotes() {
-  await noteApi.GetNote({id: noteId,userInfoId: userStore.UserId}).then(res => {
+  await noteApi.GetNote({id: noteId}).then(res => {
     NoteList.value = res.data
   })
   NoteList.value.createTime = NoteList.value.createTime.slice(0,10)
@@ -35,7 +36,7 @@ async function getNotes() {
 getNotes()
 
 async function getComment() {
-  const {data, total} = await commentApi.GetComment({id:noteId,userInfoId: userStore.UserId,})
+  const {data, total} = await commentApi.GetComment({id:noteId,userInfoId: userStore.UserId || null,})
   CommentList.value = data
   Total.value = total
 }
@@ -78,6 +79,10 @@ function upClose(row) {
 }
 
 async function likeArticle() {
+  if (!userStore.isLogin) {
+    ElMessage.error('请登录！')
+    return false
+  }
   await publicApi.likes({
     userInfoId: userStore.UserId,
     contentType: 'Article',
