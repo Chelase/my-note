@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onBeforeMount, onBeforeUnmount} from 'vue'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
 import { TipTapPlugin } from '@/utils/tiptap/index.js'
 import {useEditor, EditorContent, BubbleMenu, FloatingMenu} from '@tiptap/vue-3'
 import publicApi from "@/api/modules/public.js";
@@ -8,6 +8,7 @@ import router from "@/router/index.js";
 import noteApi from "@/api/modules/note.js";
 import {ElMessage} from "element-plus";
 import useUserStore from "@/stores/user.js";
+import {emitter} from "@/utils/emitter.js";
 
 
 const article = ref({
@@ -155,7 +156,18 @@ async function saveNote () {
   }
 }
 
+onMounted(() => {
+  emitter.on('trigger-add-image', addImage)
+  emitter.on('trigger-add-bilibili', addBilibili)
+  emitter.on('trigger-add-youtube', addYoutube)
+  emitter.on('trigger-add-tiktok', addTiktok)
+})
+
 onBeforeUnmount(() => {
+  emitter.off('trigger-add-image', addImage)
+  emitter.off('trigger-add-bilibili', addBilibili)
+  emitter.off('trigger-add-youtube', addYoutube)
+  emitter.off('trigger-add-tiktok', addTiktok)
   editor.value.destroy();
 })
 
@@ -190,6 +202,10 @@ onBeforeUnmount(() => {
     </div>
 
     <div v-if="editor">
+      <insert-menu />
+    </div>
+
+    <div v-if="editor">
       <bubble-menu
           class="bubble-menu"
           :tippy-options="{ duration: 100 }"
@@ -203,20 +219,6 @@ onBeforeUnmount(() => {
         </button>
         <button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">
           删除线
-        </button>
-        <button @click="addImage">上传图片</button>
-        <button @click="insertVideo()">插入网络视频</button>
-        <button id="youtube" @click="addYoutube()">
-          嵌入youtube视频
-        </button>
-        <button id="bilibili" @click="addBilibili()">
-          嵌入bilibili视频
-        </button>
-        <button id="tiktok" @click="addTiktok()">
-          嵌入抖音视频
-        </button>
-        <button id="web" @click="addWeb()">
-          嵌入网站
         </button>
       </bubble-menu>
 
